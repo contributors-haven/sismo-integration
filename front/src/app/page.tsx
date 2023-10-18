@@ -29,6 +29,7 @@ import {
 import { waitForTransaction } from "@wagmi/core";
 import { decodeEventLog, formatEther } from "viem";
 import { abi as AirdropABI } from "../../../abi/Airdrop.json";
+import { abi as CheckMembershipABI } from "../../../abi/CheckMembership.json";
 import { errorsABI, formatError, fundMyAccountOnLocalFork, signMessage } from "@/utils/misc";
 import { mumbaiFork } from "@/utils/wagmi";
 import {
@@ -37,7 +38,8 @@ import {
   AuthType, // the authType enum, we will choose 'VAULT' in this tutorial
   ClaimType, // the claimType enum, we will choose 'GTE' in this tutorial, to check that the user has a value greater than a given threshold
 } from "@sismo-core/sismo-connect-react";
-import { transactions } from "../../../broadcast/Airdrop.s.sol/5151111/run-latest.json";
+//import { transactions } from "../../../broadcast/Airdrop.s.sol/5151111/run-latest.json";
+import { transactions } from "../../../broadcast/CheckMembership.s.sol/5151111/run-latest.json";
 
 /* ***********************  Sismo Connect Config *************************** */
 
@@ -45,12 +47,13 @@ import { transactions } from "../../../broadcast/Airdrop.s.sol/5151111/run-lates
 // The SismoConnectConfig is a configuration needed to connect to Sismo Connect and requests data from your users.
 
 const sismoConnectConfig: SismoConnectConfig = {
-  appId: "0xf4977993e52606cfd67b7a1cde717069",
+  appId: "0x13acd90f1ab192cdd936293ee2ea759f",//"0xf4977993e52606cfd67b7a1cde717069",
   vault: {
     // For development purposes
     // insert any account that you want to impersonate  here
     // Never use this in production
     impersonate: [
+      "0x6F8Be6B46314b51C2d88F5E839dA1d5892C9cfF5",
       "leo21.sismo.eth",
       "0xA4C94A6091545e40fc9c3E0982AEc8942E282F38",
       "0x1b9424ed517f7700e7368e34a9743295a225d889",
@@ -81,13 +84,17 @@ export default function Home() {
   });
   const { switchNetworkAsync, switchNetwork } = useSwitchNetwork();
 
+  const GITCOIN_PASSPORT_HOLDERS_GROUP_ID = "0x1cde61966decb8600dfd0749bd371f12";
+  const DEV_ACCOUNTS_GROUP_ID = "0xb014033ea7797096beaa0c0a38d7f046";
+ 
+
   /* *************  Wagmi hooks for contract interaction ******************* */
   const contractCallInputs =
     responseBytes && chain
       ? {
           address: transactions[0].contractAddress as `0x${string}}`,
-          abi: [...AirdropABI, ...errorsABI],
-          functionName: "claimWithSismo",
+          abi: [...AirdropABI, ...errorsABI, ...CheckMembershipABI],
+          functionName: "checkMember",
           args: [responseBytes],
           chain,
         }
@@ -190,21 +197,20 @@ export default function Home() {
             </p>
 
             <SismoConnectButton
-              // the client config created
-              config={sismoConnectConfig}
-              // the auth request we want to make
-              // here we want the proof of a Sismo Vault ownership from our users
-              auths={[{ authType: AuthType.VAULT }]}
-              // we ask the user to sign a message
-              // it will be used onchain to prevent frontrunning
-              signature={{ message: signMessage(address) }}
-              // onResponseBytes calls a 'setResponse' function with the responseBytes returned by the Sismo Vault
-              onResponseBytes={(responseBytes: string) => {
-                setResponseBytes(responseBytes);
-              }}
-              // Some text to display on the button
-              text={"Claim with Sismo"}
-            />
+   config={sismoConnectConfig}
+   auths={[{ authType: AuthType.VAULT }]}
+   // request a proof of Gitcoin Passport ownership from your users
+   // pass the groupId and the minimum value required in the group
+   claims={[{ 
+    groupId: DEV_ACCOUNTS_GROUP_ID, 
+    value: 1, 
+    claimType: ClaimType.GTE
+   }]} 
+   signature={{ message: signMessage(address) }}
+   onResponseBytes={(responseBytes: string) => setResponseBytes(responseBytes)}
+   text={"Claim with Sismo"}
+  />
+  
           </>
         )}
 

@@ -1,5 +1,4 @@
-{
-  "abi": [
+{ "abi": [
   {
     "inputs": [
       {
@@ -98,6 +97,19 @@
   {
     "inputs": [],
     "name": "APP_ID",
+    "outputs": [
+      {
+        "internalType": "bytes16",
+        "name": "",
+        "type": "bytes16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "GITCOIN_PASSPORT_HOLDERS_GROUP_ID",
     "outputs": [
       {
         "internalType": "bytes16",
@@ -418,5 +430,4 @@
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
-}
+]}
