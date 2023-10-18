@@ -1,5 +1,23 @@
 # Sismo Connect - Onchain Tutorial Repository
 
+
+## Getting started
+
+-> Read this README, install deps
+-> In the root folder, run ``` pnpm run chain ```
+-> Deploy contracts ``` pnpm run deploy-local ```
+-> Start frontend 
+```
+cd front
+yarn next dev -p 3000
+```
+then navigate to localhost:3000
+-> Note that appId and groupId were hardcoded and are reproduced below for reference:
+GroupID - 0xb014033ea7797096beaa0c0a38d7f046
+AppId - 0x13acd90f1ab192cdd936293ee2ea759f
+
+-------------------
+
 This repository aims at providing a simple starting codebase to follow the [Sismo Connect - Onchain Tutorial](https://docs.sismo.io/sismo-docs/build-with-sismo-connect/tutorials/onchain-tutorials/tuto). It will help you understand how the [SafeDrop Case Study](https://case-studies.sismo.io/db/safe-drop) has been technically been built. You can also fork the onchain boilerplate that implements this case study with a polished UI by going to [this repository](https://github.com/sismo-core/sismo-connect-boilerplate-onchain).
 
 ## Usage
